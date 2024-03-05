@@ -1,0 +1,32 @@
+{
+  "name": "garashko-project",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "mohamedMote3",
+  "license": "ISC",
+  "dependencies": {
+    "@joi/date": "^2.1.0",
+    "@reis/joi-luxon": "^3.0.0",
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.0.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "joi": "^17.12.2",
+    "jsonwebtoken": "^9.0.2",
+    "luxon": "^3.4.4",
+    "moment": "^2.30.1",
+    "mongoose": "^8.2.0",
+    "multer": "^1.4.5-lts.1",
+    "nanoid": "^5.0.6",
+    "nodemailer": "^6.9.10",
+    "pdfkit": "^0.14.0",
+    "qrcode": "^1.5.3"
+  }
+}
