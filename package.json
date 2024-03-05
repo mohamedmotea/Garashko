@@ -4,8 +4,12 @@
   "description": "",
   "type": "module",
   "main": "index.js",
+  "engines": {
+    "node": "18.17.1"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon"
   },
   "keywords": [],
   "author": "mohamedMote3",
