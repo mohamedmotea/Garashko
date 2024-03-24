@@ -41,13 +41,13 @@ const parking_schema = new Schema({
     max:5,
     default:0,
   },
-  pricePerDay:{
+  creditPointPerHour:{
     type:Number,
     min:0,
     default:0,
     required:true
   }, 
-  pricePerMonth:{
+  creditPointPerMonth:{
     type:Number,
     min:0,
     default:0,

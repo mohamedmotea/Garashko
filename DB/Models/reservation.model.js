@@ -61,7 +61,7 @@ const reservation_schema = new Schema({
     min:1,
     default:1
    },
-   isDay:{
+   isHour:{
     type:Boolean,
     default:false
    },

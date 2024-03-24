@@ -5,11 +5,11 @@ import Parking from './../../../DB/Models/parking.model.js';
 
 export const addParking = async(req,res,next)=>{
   // destructuring the required data from request body
-  const {parking_name,city,state,address,totalPlace,pricePerDay,pricePerMonth} = req.body
+  const {parking_name,city,state,address,totalPlace,creditPointPerHour,creditPointPerMonth} = req.body
   // destructuring user data from authenticated request
   const {id:ownerId} = req.user
   // check price -> (Day or Month)
-  if(!pricePerDay && !pricePerMonth) return next(new Error('must send price',{cause:404}))
+  if(!creditPointPerHour && !creditPointPerMonth) return next(new Error('must send creditPointPrice',{cause:404}))
   // handle data received
   const location = {
     city,
@@ -25,8 +25,8 @@ export const addParking = async(req,res,next)=>{
     location,
     totalPlace,
     remainingSpace:totalPlace,
-    pricePerDay,
-    pricePerMonth
+    creditPointPerHour,
+    creditPointPerMonth
   })
   // save parking in database
   await parking.save()
@@ -36,7 +36,7 @@ export const addParking = async(req,res,next)=>{
 
 export const updateParking = async(req,res,next)=> {
   // destructuring the required data from request body
-  const {parking_name,city,state,address,totalPlace ,pricePerDay, pricePerMonth} = req.body
+  const {parking_name,city,state,address,totalPlace ,creditPointPerHour, creditPointPerMonth} = req.body
   // destructuring the required data from request params
   const {parkingId} = req.params
   // destructuring user data from authenticated request
@@ -57,8 +57,8 @@ export const updateParking = async(req,res,next)=> {
   parking.parking_name = parking_name || parking.parking_name
   parking.location = location
   if(totalPlace) parking.totalPlace = totalPlace 
-  if(  pricePerDay) parking.pricePerDay = pricePerDay
-  if(pricePerMonth) parking.pricePerMonth = pricePerMonth
+  if(creditPointPerHour) parking.creditPointPerHour = creditPointPerHour
+  if(creditPointPerMonth) parking.creditPointPerMonth = creditPointPerMonth
   // save parking in database
   await parking.save()
 

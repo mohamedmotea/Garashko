@@ -1,4 +1,6 @@
 import bcrypt from 'bcryptjs'
+import {OAuth2Client} from 'google-auth-library'
+
 import jwt from 'jsonwebtoken'
 import verifyEmailService from './utils/verifyEmail.js';
 import User from './../../../DB/Models/user.model.js';
@@ -114,4 +116,68 @@ export const deleteAccount = async (req,res,next)=>{
   const deleteAccount = await User.findByIdAndDelete(id)
   if(!deleteAccount) return next(new Error('delete fail',{cause:400}))
   return res.status(200).json({message:'Accound deleted successfully',success:true})
+}
+
+
+// SignUp With Google
+export const googleSignUp = async (req,res,next)=>{
+  const {idToken} = req.body
+  const client = new OAuth2Client();
+  async function verify() {
+  const ticket = await client.verifyIdToken({
+      idToken,
+      audience: process.env.CLIENT_ID,
+  });
+  const payload = ticket.getPayload();
+  return payload
+}
+  const result = await verify().catch(console.error);
+  if(!result.email_verified) return next(new Error('email not verified',{cause:400}))
+  // login login
+  // check email
+    const checkEmail = await User.findOne({email:result.email})
+    if(checkEmail) return next(new Error('email is already exist',{cause:409}))
+// Hashed password 
+    const defualtPassword = uniqueString(10)
+const hashedPassword = bcrypt.hashSync(defualtPassword,+process.env.SALT_ROUNDES)
+if(!hashedPassword) return next(new Error('password fail try again',{cause:400}))
+// create a new User 
+const newUser = await User.create({
+  userName:result.name
+  ,email:result.email
+  ,password:hashedPassword
+  ,isEmailVerified:result.email_verified
+  ,provider:"Google"
+})
+if(!newUser) return next(new Error('created failed',{cause:400}))
+req.savedDocument = {model:User,_id:newUser._id}
+res.status(201).json({msg:'account created successfully',success:true})
+}
+// SignIn With Google
+export const googleLogin = async (req,res,next)=>{
+  const {idToken} = req.body
+  const client = new OAuth2Client();
+  async function verify() {
+  const ticket = await client.verifyIdToken({
+      idToken,
+      audience: process.env.CLIENT_ID,
+  });
+  const payload = ticket.getPayload();
+  return payload
+}
+  const result = await verify().catch(console.error);
+  if(!result.email_verified) return next(new Error('email not verified',{cause:400}))
+  // login login
+  // find this account
+    const account = await User.findOne({email:result.email,provider:"Google"})
+    if(!account) return next(new Error('account not found',{cause:404}))
+    account.isActive = true
+  await account.save()
+  // create token
+  const token = jwt.sign(
+    {id:account._id,email:account.email,userName:account.userName,
+      createdAt:account.createdAt,role:account.role,phoneNumber:account?.phoneNumber},
+      process.env.TOKEN_SIGNATURE,
+      {expiresIn: '9d'})
+  res.status(200).json({message: 'login successful', token,success:true})
 }

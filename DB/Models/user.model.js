@@ -38,6 +38,10 @@ const user_schema = new Schema({
   isActive:{
     type:Boolean,
     default:false
+  },
+  provider:{
+    type:String,
+    enum:["Google"]
   }
 },{timestamps:true})
 

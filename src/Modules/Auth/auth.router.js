@@ -14,4 +14,7 @@ router
 .get('/verify',vld(validationSchema.verifyEmail),expressAsyncHandler(AC.verifyEmail))
 .put('/',vld(validationSchema.updateAccount),auth(Object.values(role)),expressAsyncHandler(AC.updateAccount))
 .delete('/',auth(Object.values(role)),expressAsyncHandler(AC.deleteAccount))
+// google auth
+.post('/signUpWithGoogle',vld(validationSchema.googleAuth),expressAsyncHandler(AC.googleSignUp))
+.post('/signInWithGoogle',vld(validationSchema.googleAuth),expressAsyncHandler(AC.googleLogin))
 export default router

@@ -9,8 +9,8 @@ export const addParking = {
     city:Joi.string().min(1).max(99).required(),
     state:Joi.string().min(1).max(99).required(),
     totalPlace:Joi.number().min(1).required(),
-    pricePerDay:Joi.number().required(),
-    pricePerMonth:Joi.number().required()
+    creditPointPerHour:Joi.number().required(),
+    creditPointPerMonth:Joi.number().required()
   }),
   headers:validation.headers
 }
@@ -22,8 +22,8 @@ export const updatedParking = {
     city:Joi.string().min(1).max(99),
     state:Joi.string().min(1).max(99),
     totalPlace:Joi.number().min(1),
-    pricePerDay:Joi.number()
-    ,pricePerMonth:Joi.number()
+    creditPointPerHour:Joi.number()
+    ,creditPointPerMonth:Joi.number()
   }),
   headers:validation.headers
 }

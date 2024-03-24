@@ -33,3 +33,10 @@ export const updateAccount = {
   }),
   headers:validation.headers
 }
+
+
+export const googleAuth = {
+  body:Joi.object({
+    idToken:Joi.string().required()
+  })
+}
