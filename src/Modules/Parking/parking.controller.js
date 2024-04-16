@@ -5,7 +5,7 @@ import Parking from './../../../DB/Models/parking.model.js';
 
 export const addParking = async(req,res,next)=>{
   // destructuring the required data from request body
-  const {parking_name,city,state,address,totalPlace,creditPointPerHour,creditPointPerMonth} = req.body
+  const {parking_name,city,state,address,totalPlace,creditPointPerHour,creditPointPerMonth,locationMap} = req.body
   // destructuring user data from authenticated request
   const {id:ownerId} = req.user
   // check price -> (Day or Month)
@@ -26,7 +26,8 @@ export const addParking = async(req,res,next)=>{
     totalPlace,
     remainingSpace:totalPlace,
     creditPointPerHour,
-    creditPointPerMonth
+    creditPointPerMonth,
+    locationMap
   })
   // save parking in database
   await parking.save()
@@ -36,7 +37,7 @@ export const addParking = async(req,res,next)=>{
 
 export const updateParking = async(req,res,next)=> {
   // destructuring the required data from request body
-  const {parking_name,city,state,address,totalPlace ,creditPointPerHour, creditPointPerMonth} = req.body
+  const {parking_name,city,state,address,totalPlace ,creditPointPerHour, creditPointPerMonth,locationMap} = req.body
   // destructuring the required data from request params
   const {parkingId} = req.params
   // destructuring user data from authenticated request
@@ -59,6 +60,7 @@ export const updateParking = async(req,res,next)=> {
   if(totalPlace) parking.totalPlace = totalPlace 
   if(creditPointPerHour) parking.creditPointPerHour = creditPointPerHour
   if(creditPointPerMonth) parking.creditPointPerMonth = creditPointPerMonth
+  if(locationMap) parking.locationMap = locationMap
   // save parking in database
   await parking.save()
 
@@ -94,4 +96,23 @@ export const deleteParking = async(req,res,next)=> {
   // delete Parking
   await Parking.deleteOne({_id:parkingId})
   res.status(200).json({message:'parking deleted successfully',data:parking,success:true})
+}
+
+export const getParkLocation = async (req, res,next) =>{
+    // destructuring location form request body
+    const {locationMap} = req.body
+      Parking.createIndexes({"locationMap":"2d"})
+      const maxDistance = 10000; // Distance in meters
+      const park = await  Parking.find({
+        locationMap: {
+          $near: {
+            $geometry: {
+              type: locationMap.type,
+              coordinates: locationMap.coordinates,
+            },
+            $maxDistance: maxDistance,
+          },
+        },
+      })
+    res.status(200).json({message:'fetched Near Park',data:park,success:true})
 }

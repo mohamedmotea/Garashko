@@ -21,7 +21,8 @@ const initiateApp = async (app,express)=>{
   app.use('/api/v1/rate', router.rateRouter)
   // Handle middlewares
   app.use(globalResponse,rollbackSavedDocuments)
-  app.all('/*', (req, res) => res.json({message:'invlid router'}))
+  app.use('*',(req,res,next)=> res.status(404).json({message:'page not found'}))
+
   app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 }
 

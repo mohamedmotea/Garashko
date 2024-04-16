@@ -10,7 +10,11 @@ export const addParking = {
     state:Joi.string().min(1).max(99).required(),
     totalPlace:Joi.number().min(1).required(),
     creditPointPerHour:Joi.number().required(),
-    creditPointPerMonth:Joi.number().required()
+    creditPointPerMonth:Joi.number().required(),
+    locationMap:Joi.object({
+      type:Joi.string().valid('Point').required(),
+      coordinates:Joi.array().min(2).max(2).required()
+    }).required()
   }),
   headers:validation.headers
 }
@@ -23,7 +27,11 @@ export const updatedParking = {
     state:Joi.string().min(1).max(99),
     totalPlace:Joi.number().min(1),
     creditPointPerHour:Joi.number()
-    ,creditPointPerMonth:Joi.number()
+    ,creditPointPerMonth:Joi.number(),
+    locationMap:Joi.object({
+      type:Joi.string().valid('Point').required(),
+      coordinates:Joi.array().min(2).max(2).required()
+    })
   }),
   headers:validation.headers
 }

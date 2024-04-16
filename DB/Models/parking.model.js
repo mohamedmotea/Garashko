@@ -53,6 +53,17 @@ const parking_schema = new Schema({
     default:0,
     required:true
   },
+  locationMap: {
+    type: {
+      type: String, 
+      enum: ['Point'], 
+      required: true
+    },
+    coordinates: {
+      type: [Number],
+      required: true
+    }
+  }
   
 },{timestamps:true});
 

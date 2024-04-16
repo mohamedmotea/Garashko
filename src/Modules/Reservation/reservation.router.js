@@ -11,4 +11,8 @@ const router = Router()
 
 router.post('/:parkingId',vld(validationSchema.addReservation),auth([role.USER,role.SUPERADMIN]),expressAsyncHandler(RC.reservation))
 
+
+// payment -> stripe
+.get('/checkout/:reservationId',auth([role.USER,role.SUPERADMIN,role.ADMIN]),expressAsyncHandler(RC.payWithStripe))
+// .post('/webhook',expressAsyncHandler(OC.webhookLocal))
 export default router

@@ -33,6 +33,7 @@
     "nanoid": "^5.0.6",
     "nodemailer": "^6.9.10",
     "pdfkit": "^0.14.0",
-    "qrcode": "^1.5.3"
+    "qrcode": "^1.5.3",
+    "stripe": "^15.2.0"
   }
 }
