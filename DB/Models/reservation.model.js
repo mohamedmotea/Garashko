@@ -69,7 +69,6 @@ const reservation_schema = new Schema({
     type:Boolean,
     default:false
    }
-   
 
 },{timestamps:true})
 

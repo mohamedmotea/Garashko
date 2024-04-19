@@ -17,3 +17,7 @@ export const reservationStatus = {
   CANCELLED: 'Cancelled',
   PAID: 'Paid'
 }
+export const serviceArr = ['Car electrician','Furniture maintenance',
+'Doku works','My saddlery works','Air conditioning maintenance',
+'Mechanical maintenance','Rubber maintenance','Plumbing works',
+'oil change','Spur']
