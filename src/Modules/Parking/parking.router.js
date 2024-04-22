@@ -11,6 +11,7 @@ import * as validationSchema from './parking.validation.js'
 const router = Router();
 
 router.post('/',vld(validationSchema.addParking),auth([role.GARAGEOWNER,role.SUPERADMIN]),expressAsyncHandler(PC.addParking))
+.post('/reserved/:parkingId',vld(validationSchema.handleReserved),auth([role.GARAGEOWNER,role.SUPERADMIN]),expressAsyncHandler(PC.handleReserved))
 .put('/:parkingId',vld(validationSchema.updatedParking),auth([role.GARAGEOWNER,role.SUPERADMIN]),expressAsyncHandler(PC.updateParking))
 .delete('/:parkingId',vld(validationSchema.idParams),auth([role.GARAGEOWNER,role.SUPERADMIN]),expressAsyncHandler(PC.deleteParking))
 .get('/location',expressAsyncHandler(PC.getParkLocation))

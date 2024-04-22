@@ -116,3 +116,28 @@ export const getParkLocation = async (req, res,next) =>{
       })
     res.status(200).json({message:'fetched Near Park',data:park,success:true})
 }
+
+export const handleReserved = async (req, res, next) =>{
+  // get Park
+  const {parkingId} = req.params
+  const {increase,decrease} = req.body
+  const {id:ownerId,role:userRole} = req.user
+  if(increase && decrease) return next(new Error('Values eqel ! , Send One Value',{cause:409}))
+  const parking = await Parking.findById(parkingId)
+  if(!parking) return next(new Error('Parking not found',{cause:404}))
+  if(userRole != role.SUPERADMIN && ownerId != parking.ownerId) return next(new Error("Authorization Failed",{cause:403}))
+  if(increase){
+    if(parking.totalPlace < ( parking.reserved + 1)) return next(new Error("The reserved has been completed",{cause:400}))
+    parking.reserved +=1
+    parking.remainingSpace -= 1
+    parking.save()
+  }
+  if(decrease){
+    if(parking.reserved == 0 && parking.totalPlace != 0) return next(new Error("The garage is already empty",{cause:400})) 
+    if(parking.totalPlace <= ( parking.reserved - 1)) return next(new Error("The reserved has been completed",{cause:400}))
+    parking.reserved -=1
+    parking.remainingSpace += 1
+    parking.save()
+  }
+  return res.status(200).json({message:"Parking Reserved Successfully",data:parking,success:true})
+}

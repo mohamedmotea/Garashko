@@ -31,7 +31,6 @@ const parking_schema = new Schema({
   },
   remainingSpace:{
     type:Number,
-    min:1,
     default:1,
   },
   rate:{

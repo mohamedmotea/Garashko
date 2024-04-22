@@ -41,3 +41,14 @@ export const idParams = {
     parkingId:Joi.custom(validation.id).required()
   })
 }
+
+export const handleReserved = {
+  params:Joi.object({
+    parkingId:Joi.custom(validation.id).required()
+  }),
+  body:Joi.object({
+    increase:Joi.boolean(),
+    decrease:Joi.boolean()
+  }),
+  headers:validation.headers
+}
