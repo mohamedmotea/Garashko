@@ -3,6 +3,7 @@ import db_connection from '../DB/connection.js'
 import * as router from './Modules/index.routers.js'
 import globalResponse from './Middlewares/global-response.middleware.js';
 import rollbackSavedDocuments from './Middlewares/rollback-saved-documents.middleware.js';
+import morgan from 'morgan';
 
 const initiateApp = async (app,express)=>{
 
@@ -11,6 +12,7 @@ const initiateApp = async (app,express)=>{
   app.use(express.json())
   const port = process.env.PORT
   await db_connection()
+  app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 
   // routers
   app.use('/api/v1/auth', router.authRouter)
