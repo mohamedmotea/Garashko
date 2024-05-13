@@ -30,7 +30,7 @@ const vehicle_schema = new Schema({
   },
   faceId:{
     secure_url:{type:String},
-    public_id:{type:String,unique:true}
+    public_id:{type:String}
   }
 
 

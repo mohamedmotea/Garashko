@@ -48,12 +48,12 @@ export const signIn = async (req,res,next)=>{
   const account = await User.findOne({email})
   if(!account) return next(new Error('account not found',{cause:404}))
   // check if this account already verified
-  if (!account.isEmailVerified) {
-      // verify Email -> send code in email
-      const verify = await verifyEmailService(email,req)
-      if(!verify) return next(new Error('email verify fail',{cause:400}))   
-      return next(new Error('account not verified , check your email',{cause:400}))
-  }
+  //* if (!account.isEmailVerified) {
+  //     // verify Email -> send code in email
+  //     const verify = await verifyEmailService(email,req)
+  //     if(!verify) return next(new Error('email verify fail',{cause:400}))   
+  //     return next(new Error('account not verified , check your email',{cause:400}))
+  //* }
   // check if password is correct
   const isPasswordCorrect = bcrypt.compareSync(password,account.password)
   if(!isPasswordCorrect) return next(new Error('password incorrect',{cause:400}))
