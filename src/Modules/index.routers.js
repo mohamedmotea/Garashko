@@ -7,6 +7,8 @@ import reservationRouter from './Reservation/reservation.router.js';
 import rateRouter from './Rate/rate.router.js';
 import serviceRouter from './app-Service/service.router.js';
 import OrderRouter from './Order/order.router.js';
+import walletRouter from './Wallet/wallet.router.js';
+import analysisRouter from './Analysis/analysis.router.js'
 export {
   userRouter,
   authRouter,
@@ -15,5 +17,8 @@ export {
   reservationRouter,
   rateRouter,
   serviceRouter,
-  OrderRouter
+  OrderRouter,
+  walletRouter,
+  analysisRouter
+  
 }

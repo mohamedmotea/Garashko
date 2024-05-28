@@ -25,7 +25,7 @@ export const addRate = async (req,res,next)=>{
     userId,
     parkingId,
     rating:rate
-  }).populate([{path:'parkingId'},{path:'userId'}])
+  })
   // save new rate in database
   await newRate.save()
   const calcRateParking = await calcRate({parkingId})

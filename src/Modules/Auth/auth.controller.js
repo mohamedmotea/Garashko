@@ -4,6 +4,7 @@ import {OAuth2Client} from 'google-auth-library'
 import jwt from 'jsonwebtoken'
 import verifyEmailService from './utils/verifyEmail.js';
 import User from './../../../DB/Models/user.model.js';
+import Wallet from '../../../DB/Models/wallet.model.js';
 
 export const signUp = async (req,res,next)=>{
   // destructure the required data for request body
@@ -22,6 +23,7 @@ export const signUp = async (req,res,next)=>{
   const newUser = await User.create({userName,email,password:hashedPassword,role,phoneNumber})
   if(!newUser) return next(new Error('created failed',{cause:400}))
   req.savedDocument = {model:User,_id:newUser._id}
+  await Wallet.create({user:newUser?._id})
   res.status(201).json({message:'account created successfully',success:true})
 }
 
