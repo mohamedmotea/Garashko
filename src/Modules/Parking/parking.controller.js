@@ -1,5 +1,6 @@
 
 import ApiFeatures from '../../utils/api-feature.js';
+import generateQrCode from '../../utils/qrcode.js';
 import { role } from '../../utils/system-rules.js';
 import Parking from './../../../DB/Models/parking.model.js';
 
@@ -80,7 +81,8 @@ export const singlePark = async(req,res,next)=>{
   // get Parking
   const parking = await Parking.findById(parkingId).populate('ownerId','userName')
   if(!parking) return next(new Error('Parking not found',{cause:404}))
-  res.status(200).json({message:'fetched Parking details',data:parking,success:true})
+    const qrcode = await generateQrCode(parking)
+  res.status(200).json({message:'fetched Parking details',data:parking,qrcode,success:true})
 }
 
 export const deleteParking = async(req,res,next)=> {

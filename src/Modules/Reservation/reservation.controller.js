@@ -6,20 +6,22 @@ import Parking from '../../../DB/Models/parking.model.js';
 import createInvoice from '../../utils/pdfkit.js';
 import uniqueString from './../../utils/generate-unique-string.js';
 import { confimedPaymentIntent, createCheckOutSession, createPaymentIntent } from '../../payment-handler/stripe.js';
+import Wallet from '../../../DB/Models/wallet.model.js';
 
 
 export const reservation = async (req,res,next)=>{
   // destructuring required data from request body
-  const {paymentMethod,fromDate,vehicle,quantity,isHour,isMonth} = req.body
+  const {paymentMethod,vehicle,quantity,isHour,isMonth} = req.body
   // destructuring user data from authenticated request
   const {id:userId,userName} = req.user
   // destructuring parking id from request params
   const {parkingId} = req.params
   // get parking by id
+  const wallet = await Wallet.findOne({user:userId})
   const park = await Parking.findById(parkingId)
   if(!park) return next(new Error('Parking not found',{cause:404}))
   // check isHour and isMonth
-if(isHour == isMonth || (!isHour && !isMonth)) return next(new Error('check type of (isHour or isMonth)',{cause:400}))
+// if(isHour == isMonth || (!isHour && !isMonth)) return next(new Error('check type of (isHour or isMonth)',{cause:400}))
   // handle data received
   let vehicleId = vehicle
   if(!vehicle) {
@@ -30,26 +32,39 @@ if(isHour == isMonth || (!isHour && !isMonth)) return next(new Error('check type
   // calc total Price
   let basePrice = 0
   let totalPrice = 0
+  const now = DateTime.now();
+
+  // إضافة ساعة واحدة
+  const fromDate = now.plus({ hours: 1 });
   let toDate;
-  console.log(DateTime.fromISO(DateTime.fromJSDate(new Date(fromDate))))
-  let convertFromDate =  fromDate ? DateTime.fromISO(DateTime.fromJSDate(new Date(fromDate))) : DateTime.now()
+  // let convertFromDate =  fromDate ? DateTime.fromISO(DateTime.fromJSDate(new Date(fromDate))) : DateTime.now()
   if(isHour) {
-    toDate = DateTime.fromISO(convertFromDate).plus({hours:+quantity}).toFormat('yyyy-MM-dd hh:mm')
-    basePrice = park.pricePerHour
+    // toDate = DateTime.fromISO(convertFromDate).plus({hours:+quantity}).toFormat('yyyy-MM-dd hh:mm')
+    toDate = DateTime.fromISO(fromDate).plus({hours:+quantity}).toFormat('yyyy-MM-dd hh:mm')
+    basePrice = park.creditPointPerHour
   }
   if(isMonth){
-    toDate = DateTime.fromISO(convertFromDate).plus({months:+quantity}).toFormat('yyyy-MM-dd hh:mm')
-    basePrice = park.pricePerMonth
+    // toDate = DateTime.fromISO(convertFromDate).plus({months:+quantity}).toFormat('yyyy-MM-dd hh:mm')
+    toDate = DateTime.fromISO(fromDate).plus({months:+quantity}).toFormat('yyyy-MM-dd hh:mm')
+    basePrice = park.creditPointPerMonth
   } 
   totalPrice = basePrice * quantity
+
 
   let reservationStatus = systemRule.reservationStatus.PENDING
   if(paymentMethod == systemRule.paymentMethod.CASH){
     reservationStatus = systemRule.reservationStatus.PLACED
+  }else if(paymentMethod == systemRule.paymentMethod.CREDIT){
+    if(wallet.total < totalPrice) return next(new Error('don`t have enough coins to reservation'))
+      wallet.total -= totalPrice
+      reservationStatus = systemRule.reservationStatus.PAID
+
+      await wallet.save()
   }
   const reservation = {
     paymentMethod,
-    fromDate:convertFromDate.toFormat("yyyy-MM-dd hh:mm"),
+    // fromDate:convertFromDate.toFormat("yyyy-MM-dd hh:mm"),
+    fromDate:fromDate.toFormat("yyyy-MM-dd hh:mm"),
     toDate,
     vehicleId,
     userId,
@@ -59,31 +74,38 @@ if(isHour == isMonth || (!isHour && !isMonth)) return next(new Error('check type
     isMonth,
     basePrice,
     totalPrice,
-    quantity
+    quantity,
+    wallet
   }
-  const newReservation = new Reservation(reservation)
   // await newReservation.save()
-  req.savedDocument = {model:Reservation,_id:newReservation._id}
   // pdf reset 
-  // const orderCode = `${userId}_${uniqueString(4)}`
-  // const invoiceObj = {
-  //   date: DateTime.now().toFormat('yyyy-MM-dd hh:mm'),
-  //   name:userName,
-  //   shipping:park.location,
-  //   items:[{
-  //     name:park.parking_name,
-  //     fromDate:reservation.fromDate,
-  //     toDate:reservation.toDate,
-  //     basePrice:reservation.basePrice,
-  //     quantity:reservation.quantity,
-  //     totalPrice:reservation.totalPrice
-  //   }],
-  //   subTotal:reservation.totalPrice,
-  //   paidAmount:reservation.totalPrice,
-  //   orderCode,
-  // }
-  // createInvoice(invoiceObj,`${orderCode}.pdf`)
+  const orderCode = `${userId}_${uniqueString(4)}`
+  // Park Reservation
+  park.reserved +=1
+  park.remainingSpace -=1
+  const newReservation = new Reservation(reservation)
 
+  req.savedDocument = {model:Reservation,_id:newReservation._id}
+
+  const invoiceObj = {
+    date: DateTime.now().toFormat('yyyy-MM-dd hh:mm'),
+    name:userName,
+    shipping:park.location,
+    items:[{
+      name:park.parking_name,
+      fromDate:reservation.fromDate,
+      toDate:reservation.toDate,
+      basePrice:reservation.basePrice,
+      quantity:reservation.quantity,
+      totalPrice:reservation.totalPrice
+    }],
+    subTotal:reservation.totalPrice,
+    paidAmount:reservation.totalPrice,
+    orderCode,
+  }
+  createInvoice(invoiceObj,`${orderCode}.pdf`)
+  await park.save()
+  await newReservation.save()
   res.status(201).json({message:'reservation created successfully',data:newReservation,success:true})
 
 }
@@ -192,7 +214,5 @@ export const webhook = async (req, res ,next) => {
     default:
       console.log(`Unhandled event type ${event.type}`);
   }
-
-
 
 }

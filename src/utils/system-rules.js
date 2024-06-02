@@ -7,7 +7,7 @@ export const role = {
 
 export const paymentMethod = {
   CASH: 'Cash',
-  CREDIT: 'Credit Card',
+  CREDIT: 'Credit Point',
   PAYMOB:'Paymob',
   STRIPE: 'Stripe'
 }
@@ -20,4 +20,4 @@ export const reservationStatus = {
 export const serviceArr = ['Car electrician','Furniture maintenance',
 'Doku works','My saddlery works','Air conditioning maintenance',
 'Mechanical maintenance','Rubber maintenance','Plumbing works',
-'oil change','Spur']
+'oil change','Spur','Car Wash']

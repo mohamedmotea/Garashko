@@ -44,7 +44,6 @@ export const createPaymentIntent = async ({amount})=>{
   })
   return paymentIntent
 }
-
   const retrievePaymentIntent = async (paymentIntentId)=>{
   const stripe = new Stripe(process.env.STRIPE_CONNECTION)
   const retrieve = await stripe.paymentIntents.retrieve(paymentIntentId)

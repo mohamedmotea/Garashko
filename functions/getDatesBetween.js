@@ -3,9 +3,7 @@ import { DateTime } from 'luxon'
 const getDatesBetween = () =>{
   const dates = [];
   const start =    DateTime.now().minus({ days: 6 }).startOf('day');
-
   const end =   DateTime.now();
-
   let currentDate = start;
   while (currentDate <= end) {
     dates.push(currentDate.toISO());

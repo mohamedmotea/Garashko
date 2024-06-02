@@ -9,6 +9,7 @@ import { role } from "../../utils/system-rules.js";
 const router = Router()
 
 router
+.patch('/:userId',auth([role.SUPERADMIN]),expressAsyncHandler(WC.addAmount))
 .get('/user',auth(Object.values(role)),expressAsyncHandler(WC.userWallet))
 .get('/:walletId',auth([role.SUPERADMIN]),expressAsyncHandler(WC.singleWallet))
 .get('/',auth([role.SUPERADMIN]),expressAsyncHandler(WC.wallets))

@@ -25,6 +25,7 @@ const initiateApp = async (app,express)=>{
   app.use('/api/v1/order', router.OrderRouter)
   app.use('/api/v1/wallet', router.walletRouter)
   app.use('/api/v1/analysis', router.analysisRouter)
+  app.use('/api/v1/banner', router.bannerRouter)
   // Handle middlewares
   app.use(globalResponse,rollbackSavedDocuments)
   app.use('*',(req,res,next)=> res.status(404).json({message:'page not found'}))
