@@ -66,6 +66,7 @@ const parking_schema = new Schema({
   
 },{timestamps:true});
 
+parking_schema.index({ locationMap: "2dsphere" });
 const Parking = model("Parking",parking_schema);
 
 export default Parking;

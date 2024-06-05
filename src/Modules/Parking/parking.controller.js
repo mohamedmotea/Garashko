@@ -103,8 +103,10 @@ export const deleteParking = async(req,res,next)=> {
 export const getParkLocation = async (req, res,next) =>{
     // destructuring location form request body
     const {locationMap} = req.body
+    const {distance = 1000} = req.query
       Parking.createIndexes({"locationMap":"2d"})
-      const maxDistance = 10000; // Distance in meters
+      // const maxDistance = 10000; // Distance in meters
+      const maxDistance = distance; // Distance in meters
       const park = await  Parking.find({
         locationMap: {
           $near: {

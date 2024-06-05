@@ -23,7 +23,7 @@ export const signUp = async (req,res,next)=>{
   const newUser = await User.create({userName,email,password:hashedPassword,role,phoneNumber})
   if(!newUser) return next(new Error('created failed',{cause:400}))
   req.savedDocument = {model:User,_id:newUser._id}
-  await Wallet.create({user:newUser?._id})
+  await Wallet.create({user:newUser?._id,total:10})
   res.status(201).json({message:'account created successfully',success:true})
 }
 
