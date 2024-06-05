@@ -31,7 +31,7 @@ export const users = async (req,res,next) => {
 export const deleteUser = async (req,res,next) => {
   const {accountId} = req.params
   // get the account
-  const account = await User.findById(accountId)
+  const account = await User.findByIdAndDelete(accountId)
   if(!account) return next(new Error('Account not found',{cause:404}))
 
   res.status(200).json({message:'fetched users details',data:true,success:true})
