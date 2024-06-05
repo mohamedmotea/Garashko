@@ -10,6 +10,7 @@ import OrderRouter from './Order/order.router.js';
 import walletRouter from './Wallet/wallet.router.js';
 import analysisRouter from './Analysis/analysis.router.js'
 import bannerRouter from './Banner/banner.router.js'
+import paymentMethodRouter from './PaymentMethod/paymentMethod.router.js';
 
 export {
   userRouter,
@@ -22,6 +23,7 @@ export {
   OrderRouter,
   walletRouter,
   analysisRouter,
-  bannerRouter
+  bannerRouter,
+  paymentMethodRouter
   
 }

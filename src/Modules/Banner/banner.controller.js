@@ -7,12 +7,12 @@ import generateQrCode from "../../utils/qrcode.js"
 export const singleBanner = async (req,res,next) => {
   // destructuring the required data from request params
   const {bannerId} = req.params
-  // get the wallet data
+  // get the banner data
   const banner = await Banner.findById(bannerId)
   if(!banner) return next(new Error('Banner not found',{cause:404}))
     // QrCode 
     const qrcode = await generateQrCode(banner)
-  // return the wallet data
+  // return the banner data
   res.status(200).json({message:'fetched Banner details',data:banner,qrcode,success:true})
 }
 
@@ -26,7 +26,7 @@ export const banners = async (req,res,next) => {
 export const addBanner = async (req,res,next) => {
   // destructuring the required data from request params
   const {name,description,link} = req.body
-  // get the wallet data
+  // get the banner data
   const banner = await Banner.findOne({name})
   if(banner) return next(new Error('Banner is exist',{cause:404}))
     // create new banner
@@ -40,11 +40,9 @@ export const addBanner = async (req,res,next) => {
 
   const newBanner = await Banner.create({name,description,image:{public_id,secure_url},folderId,link})
   if(!newBanner) return next(new Error('Banner is not created',{cause:404}))
-  // return the wallet data
-  res.status(200).json({message:'Banner is created',data:newBanner,success:true})
     // QrCode 
     const qrcode = await generateQrCode(banner)
-  // return the wallet data
+  // return the banner data
   res.status(200).json({message:'fetched Banner details',data:banner,qrcode,success:true})
 }
 
@@ -53,7 +51,7 @@ export const updateBanner = async (req,res,next) => {
   const {bannerId} = req.params
   const {name,description,link} = req.body
 
-  // get the wallet data
+  // get the banner data
   const banner = await Banner.findById(bannerId)
   if(!banner) return next(new Error('Banner not found',{cause:404}))
   // uploud image in cloudinary 
@@ -77,9 +75,9 @@ export const updateBanner = async (req,res,next) => {
 export const deleteBanner = async (req,res,next) => {
   // destructuring the required data from request params
   const {bannerId} = req.params
-  // get the wallet data
+  // get the banner data
   const banner = await Banner.findByIdAndDelete(bannerId)
   if(!banner) return next(new Error('Banner not found',{cause:404}))
-  // return the wallet data
+  // return the banner data
   res.status(200).json({message:'deleted Banner details',data:banner,success:true})
 }

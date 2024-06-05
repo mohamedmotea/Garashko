@@ -13,6 +13,6 @@ router.post('/:parkingId',vld(validationSchema.addReservation),auth([role.USER,r
 
 
 // payment -> stripe
-.get('/checkout/:reservationId',auth([role.USER,role.SUPERADMIN,role.ADMIN]),expressAsyncHandler(RC.payWithStripe))
+.post('/checkout/:reservationId',auth([role.USER,role.SUPERADMIN,role.ADMIN]),expressAsyncHandler(RC.payWithStripe))
 // .post('/webhook',expressAsyncHandler(OC.webhookLocal))
 export default router
