@@ -43,7 +43,18 @@ const user_schema = new Schema({
     type:String,
     enum:["Google"]
   }
-},{timestamps:true})
+},{timestamps:true,toJSON:{
+  transform:(doc,rt)=>{
+    delete rt.password
+    return rt
+  }
+},toObject:{
+  transform:(doc,rt)=>{
+    delete rt.password
+    return rt
+  }
+}
+})
 
 const User = model("User",user_schema)
 

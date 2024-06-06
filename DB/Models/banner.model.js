@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 
 
-const banner_schema = mongoose.Schema({
+const banner_schema = new mongoose.Schema({
     name: { type:String, required: true ,unique:true },
     description:{ type: String},
     link: { type: String }, 

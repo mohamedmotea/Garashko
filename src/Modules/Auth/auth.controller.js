@@ -180,6 +180,6 @@ export const googleLogin = async (req,res,next)=>{
     {id:account._id,email:account.email,userName:account.userName,
       createdAt:account.createdAt,role:account.role,phoneNumber:account?.phoneNumber},
       process.env.TOKEN_SIGNATURE,
-      {expiresIn: '9d'})
+      {expiresIn: '1y'})
   res.status(200).json({message: 'login successful', token,success:true})
 }
