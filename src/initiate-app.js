@@ -28,6 +28,8 @@ const initiateApp = async (app,express)=>{
   app.use('/api/v1/banner', router.bannerRouter)
   app.use('/api/v1/payment', router.paymentMethodRouter)
   app.use('/api/v1/event', router.eventRouter)
+  app.use('/api/v1/support', router.supportRouter)
+  
   
   // Handle middlewares
   app.use(globalResponse,rollbackSavedDocuments)
