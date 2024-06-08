@@ -44,18 +44,17 @@ const user_schema = new Schema({
     enum:["Google"]
   }
 },{timestamps:true,toJSON:{
-  transform:(doc,rt)=>{
-    delete rt.password
-    return rt
+  transform: function(doc, ret) {
+    delete ret.password; // إزالة الحقل من النتيجة النهائية
+    return ret;
   }
-},toObject:{
-  transform:(doc,rt)=>{
-    delete rt.password
-    return rt
+},
+toObject: {
+  transform: function(doc, ret) {
+    delete ret.password; // إزالة الحقل من النتيجة النهائية
+    return ret;
   }
-}
-})
-
+}});
 const User = model("User",user_schema)
 
 export default User

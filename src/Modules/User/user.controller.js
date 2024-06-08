@@ -1,5 +1,4 @@
 import User from "../../../DB/Models/user.model.js"
-import ApiFeatures from "../../utils/api-feature.js"
 
 
 export const getAccountData = async (req,res,next) => {
@@ -23,9 +22,34 @@ export const getSpecialAccount = async (req,res,next) => {
 }
 
 export const users = async (req,res,next) => {
-  const {page,size,...search} = req.query
-  const apiFeature = new ApiFeatures(req.query,User.find({},'-password')).pagination({page,size}).search(search)
-  const users = await apiFeature.mongooseQuery
+  const { size = 10, page = 1 ,userName,phone} = req.query
+  const skip = (page - 1) * size;
+  let query = {}
+  if(phone) query.phone = {$regex:phone}
+  if(userName) query.userName = {$regex:userName,$options:'i'}
+  const users = await User.aggregate([
+    {$lookup: {
+      from: "wallets",
+      localField: "_id",
+      foreignField: "user",
+      as: "wallet"
+    }},
+    {$unwind:{
+      path: "$wallet",
+      preserveNullAndEmptyArrays: true
+    }},
+    {
+      $project: {
+          password: 0 
+      }
+  },
+    {$match:query},
+    {$sort:{createdAt:-1}},
+    {$skip:skip},
+    {$limit:size}
+
+  ])
+
   res.status(200).json({message:'fetched users details',data:users,success:true})
 }
 export const deleteUser = async (req,res,next) => {
