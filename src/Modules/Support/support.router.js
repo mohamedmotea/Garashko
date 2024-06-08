@@ -7,6 +7,6 @@ import auth from '../../Middlewares/auth.middleware.js';
 const router = Router()
 
 router
-.get('/',expressAsyncHandler(SC.support))
+.post('/',expressAsyncHandler(SC.support))
 
 export default router
