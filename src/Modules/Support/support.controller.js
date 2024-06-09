@@ -15,7 +15,7 @@ export const support = async (req,res,next) => {
   const configuration = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
   const model = configuration.getGenerativeModel({model: "gemini-1.5-flash"});
-  const prompt = req.body.text
+  const prompt = req.query.text
   parts.push({text: prompt})
   const result = await model.generateContent({
       contents: [{ role: "user", parts }],
@@ -25,5 +25,5 @@ export const support = async (req,res,next) => {
   const text = response.text();
   console.log(text);
 
-  res.send(text);
+  res.json({data:text});
 }
