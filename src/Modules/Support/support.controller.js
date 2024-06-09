@@ -23,7 +23,6 @@ export const support = async (req,res,next) => {
   });
   const response =  result.response;
   const text = response.text();
-  console.log(text);
 
   res.json({data:text});
 }
