@@ -12,7 +12,7 @@ const initiateApp = async (app,express)=>{
   app.use(express.json())
   const port = process.env.PORT
   await db_connection()
-  app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+  // app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 
   // routers
   app.use('/api/v1/auth', router.authRouter)
